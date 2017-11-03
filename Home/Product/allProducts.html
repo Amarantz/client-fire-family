@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--<script type='text/javascript' src='/scripts/example.js'></script>-->
 <head>
     <meta charset="UTF-8">
     <title>All Products</title>
 </head>
     <body>
-        <p>all of the products :)</p>
+        <p id="allProducts">all of the products :)</p>
+        <button id="clickbtn" onclick="getgoogle()"> click </button>
     </body>
+<script>
+    function getgoogle() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://165.227.17.104:8000/product");
+        xhr.send();
+
+        console.log(xhr.status);
+        console.log(xhr.statusText);
+    }
+</script>
 </html>
