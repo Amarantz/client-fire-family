@@ -7,9 +7,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <style>
-    td {
+    td th {
         border: solid;
         border-color: black;
+        padding: 5px;
+    }
+
+    th {
+        border: solid;
+        border-color: darkmagenta;
         padding: 5px;
     }
 </style>
@@ -18,39 +24,28 @@
         <button id="clickbtn" type="button"> click </button>
         <table id="crap">
             <tr>
-                <td>productid</td>
-                <td>productname</td>
-                <td>notificationquantity</td>
-                <td>color</td>
-                <td>trimcolor</td>
-                <td>size</td>
-                <td>price</td>
-                <td>dimensions</td>
-                <td>sku</td>
+                <th>productid</th>
+                <th>productname</th>
+                <th>notificationquantity</th>
+                <th>color</th>
+                <th>trimcolor</th>
+                <th>size</th>
+                <th>price</th>
+                <th>dimensions</th>
+                <th>sku</th>
             </tr>
         </table>
     </body>
 <script>
-    function getgoogle() {
-        // var xhr = new XMLHttpRequest();
-        // xhr.open("GET", "http://165.227.17.104:8000/product");
-        // xhr.send();
 
-        // console.log(JSON.responseText);
-        // console.log('Status: ' + xhr.status);
-        // console.log('StatusTxt: ' + xhr.statusText);
-
-    }
-
-
-    $("#clickbtn").click(function(){
+    function showProducts(){
         $.getJSON("http://165.227.17.104:8000/product", function(result){
              $.each(result, function(i, field){
                  $("#crap").append(
                  "<tr><td>" + field.productid + "</td><td>" + field.productname + "</td><td>" + field.notificationquantity
-                     + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
-                     + "</td> <td>" + field.price + "</td> <td>" + field.dimensions + "</td> <td>" + field.sku + "</td> " +
-                     + "</tr>"
+                         + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
+                         + "</td> <td>" + field.price + "</td> <td>" + field.dimensions + "</td> <td>" + field.sku + "</td> " +
+                         + "</td> <td>" + field.deleted + "</td> <td>" + field.quantity + "</td> " + "</tr>"
                  );
              });
             /*
@@ -62,11 +57,16 @@
             size,
             price,
             dimensions,
-            sku
+            sku,
+            deleted,
+            quantity
             */
 
             console.log(result);
         });
-    });
+    }
+
+    $( window ).on( "load", showProducts );
+
 </script>
 </html>
