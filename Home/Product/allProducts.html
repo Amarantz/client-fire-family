@@ -20,8 +20,7 @@
     }
 </style>
     <body>
-        <p id="allProducts">all of the products :)</p>
-        <button id="clickbtn" type="button"> click </button>
+        <h1 id="allProducts">Products</h1>
         <table id="crap">
             <tr>
                 <th>productid</th>
@@ -33,6 +32,7 @@
                 <th>price</th>
                 <th>dimensions</th>
                 <th>sku</th>
+                <th></th>
             </tr>
         </table>
     </body>
@@ -45,7 +45,8 @@
                  "<tr><td>" + field.productid + "</td><td>" + field.productname + "</td><td>" + field.notificationquantity
                          + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
                          + "</td> <td>" + field.price + "</td> <td>" + field.dimensions + "</td> <td>" + field.sku + "</td> " +
-                         + "</td> <td>" + field.deleted + "</td> <td>" + field.quantity + "</td> " + "</tr>"
+                         + "</td> <td>" + field.deleted + "</td> <td>" + field.quantity + "</td> <td>"
+                         + "<button class='btn' id='" + field.productid + "_btn' type='button'>Edit<button></tr>"
                  );
              });
             /*

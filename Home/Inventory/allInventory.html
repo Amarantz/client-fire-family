@@ -21,9 +21,8 @@
 
 </style>
 <body>
-    <p id="allInventory"> all of the inventory :)</p>
+    <h1 id="allInventory"> Inventory </h1>
 
-    <button id="clickbtn" type="button"> click </button>
     <table id="crap">
         <tr>
             <th>inventoryid</th>
@@ -32,6 +31,7 @@
             <th>productid</th>
             <th>deleted</th>
             <th>sku</th>
+            <th></th>
         </tr>
     </table>
 </body>
@@ -41,7 +41,8 @@
                 $.each(result, function(i, field){
                     $("#crap").append(
                             "<tr><td>" + field.inventoryid + "</td><td>" + field.quantity + "</td><td>" + field.datelastupdated
-                            + "</td><td>" + field.productid + "</td> <td>" + field.deleted + "</td><td>" + field.sku + "</td> " + "</tr>"
+                            + "</td><td>" + field.productid + "</td> <td>" + field.deleted + "</td><td>" + field.sku + "</td><td>"
+                            + "<button class='btn' id='" + field.inventoryid + "_btn' type='button'>Edit<button></tr>"
                     );
                 });
                 /*
