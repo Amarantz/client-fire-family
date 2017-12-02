@@ -37,7 +37,7 @@
 </body>
     <script>
         function showInventory(){
-            $.getJSON("http://165.227.17.104:8000/inventory", function(result){
+            $.getJSON("http://165.227.17.104:8000/inventories", function(result){
                 $.each(result, function(i, field){
                     $("#crap").append(
                             "<tr><td>" + field.inventoryid + "</td><td>" + field.quantity + "</td><td>" + field.datelastupdated
@@ -45,6 +45,8 @@
                             + "<button class='btn' id='" + field.inventoryid + "_btn' type='button'>Edit<button></tr>"
                     );
                 });
+                console.log(result);
+
                 /*
                 inventoryid,
                 quantity,

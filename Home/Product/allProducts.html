@@ -7,21 +7,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <style>
-    td th {
-        border: solid;
-        border-color: black;
-        padding: 5px;
-    }
 
-    th {
-        border: solid;
-        border-color: darkmagenta;
-        padding: 5px;
-    }
 </style>
     <body>
         <h1 id="allProducts">Products</h1>
-        <table id="crap">
+        <table border="5" id="crap">
             <tr>
                 <th>productid</th>
                 <th>productname</th>
@@ -32,7 +22,8 @@
                 <th>price</th>
                 <th>dimensions</th>
                 <th>sku</th>
-                <th></th>
+                <th>quantity</th>
+
             </tr>
         </table>
     </body>
@@ -41,12 +32,12 @@
     function showProducts(){
         $.getJSON("http://165.227.17.104:8000/product", function(result){
              $.each(result, function(i, field){
+                 var quantity = '0';
                  $("#crap").append(
                  "<tr><td>" + field.productid + "</td><td>" + field.productname + "</td><td>" + field.notificationquantity
                          + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
-                         + "</td> <td>" + field.price + "</td> <td>" + field.dimensions + "</td> <td>" + field.sku + "</td> " +
-                         + "</td> <td>" + field.deleted + "</td> <td>" + field.quantity + "</td> <td>"
-                         + "<button class='btn' id='" + field.productid + "_btn' type='button'>Edit<button></tr>"
+                         + "</td> <td>" + field.price + "</td> <td>" + field.dimensions + "</td> <td>" + field.sku + "</td> "
+                         + "<td> butts </td></tr>"
                  );
              });
             /*
