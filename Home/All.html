@@ -3,14 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>All</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-    <select>
-        <option value="increment">increment</option>
-        <option value="decrement">decrement</option>
-    </select>
+<div id="fullPage">
+    <div id="inc_dec">
+        <select style="padding:10px">
+            <option value="increment">increment</option>
+            <option value="decrement">decrement</option>
+        </select>
 
-    SKU: <input type="text" name="sku">
-    <button type="button">Submit</button>
+        SKU: <input type="text" name="sku" style="padding-right: 5px">
+        <button style="padding:10px" type="button">Submit</button>
+    </div>
+    <div id="add_search">
+        <button type="button" style="padding:20px; background-color: lightgreen">ADD NEW</button>
+
+    </div>
+    <div id="products">
+
+    </div>
+</div>
+<script>
+    function loadAll() {
+        $("#fullPage").clear;
+        $("#fullPage").append("is this working?");
+        
+    }
+    function loadIncDec() {
+
+    }
+
+    $( window ).on( "load", loadAll );
+</script>
 </body>
 </html>
