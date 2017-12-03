@@ -89,9 +89,10 @@
             $.each(result, function(i, field){
                 var qty = 'poop' // getQuantity(field.sku);
                 $("#productTable").append(
-                        "<tr><td><button type='button' onclick=\"edit()\" id=\""+field.sku+"\">EDIT<button></td><td>" + field.productname + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
-                        + "</td> <td>" + field.price + "</td><td>" + qty + "</td><td><button type='button'>INC<button></td><td><button type='button'>DEC<button></td><td>" +
-                        "<button type='button'>DELETE<button></td></tr>"
+                        "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\""+field.sku+"\">EDIT<button></td><td>"
+                        + field.productname + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
+                        + "</td> <td>" + field.price + "</td><td>" + qty + "</td><td><button type='button'>INC<button></td><td><button type='button'>DEC<button></td><td>"
+                        + "<button type='button'>DELETE<button></td></tr>"
                 );
                 console.log("product" + i);
                 console.log(field);
@@ -105,11 +106,9 @@
             return result.quantity;
         });
     }
-    function edit() {
-        var editSku = '';
-        console.log($(this));
+    function edit(id) {
         loadSingle();
-        loadUpdate();
+        loadUpdate(id);
     }
     function loadSingle() {
         // update or create will be called after this depending on the button pressed
@@ -168,8 +167,19 @@
                 "    </table>");
 
     }
-    function loadUpdate() {
-
+    function loadUpdate(sku) {
+        $.getJSON("http://165.227.17.104:8000/product/"+sku, function(result) {
+            $("#prodName").val(result[0].productname);
+            $("#sku").val(result[0].sku);
+            $("#color").val(result[0].color);
+            $("#trimColor").val(result[0].trimcolor);
+            $("#size").val(result[0].size);
+            $("#dimensions").val(result[0].dimensions);
+            $("#notifQty").val(result[0].notificationquantity);
+            $("#qty").val('NOT AVAILABLE');
+        });
+        $('#sku').attr('readonly', true);
+        $("#action").text('Update');
     }
     function loadCreate() {
 
