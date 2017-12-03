@@ -58,7 +58,7 @@
     }
     function loadAddSearch() {
         $("#fullPage").append("<div id=\"add_search\">" +
-                "        <button type=\"button\" style=\"padding:20px; background-color: lightgreen\">ADD NEW</button>" +
+                "        <button type=\"button\" style=\"padding:20px; background-color: lightgreen\" onclick=\"addNew(this.id)\">ADD NEW</button>" +
                 "        <span style=\"padding-right:460px\"></span>" +
                 "        SKU: <input type=\"text\" name=\"search_sku\" style=\"padding-right: 5px\">" +
                 "        <button style=\"padding:10px\" type=\"button\">Search</button>" +
@@ -109,6 +109,10 @@
         loadSingle();
         loadUpdate(id);
     }
+    function addNew(id) {
+        loadSingle();
+        loadUpdate(id)
+    }
     function loadSingle() {
         // update or create will be called after this depending on the button pressed
         $("#fullPage").empty();
@@ -158,7 +162,7 @@
                 "            <td style=\"padding-right: 50px\"></td>" +
                 "            <td>" +
                 "                 <span id=\"update_create\" style=\"padding:20px\">" +
-                "            <button type=\"button\" id=\"action\" onclick=\"crement(this.innerText)\">test</button>" +
+                "            <button type=\"button\" id=\"action\" onclick=\"updateCreate(this.innerText)\">test</button>" +
                 "        </span>" +
                 "                <button type=\"button\" id=\"cancel\" onclick=\"loadAll()\">cancel</button>" +
                 "            </td>" +
@@ -195,12 +199,12 @@
         $("#action").text('Create');
     }
 
-    function crement(txt) {
+    function updateCreate(txt) {
         if (txt == 'Update'){
             update();
         }
         else if(txt == 'Create'){
-
+            create();
         }
         else{
             alert('ya done goofed son ' + txt)
@@ -211,19 +215,32 @@
         var sku = $("#sku").val();
         var quantity = $("#qty").val();
         $.getJSON("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, function(result) {
-
+            console.log('update inventory result');
+            console.log(result);
         });
+
+        $.getJSON("http://165.227.17.104:8000/product/update/"+sku, function(result) {
+            console.log('update product result');
+            console.log(result);
+        });
+        $('#successMsg').innerText("Updated successfully!");
+        }
+
+    function create(){
+        $.getJSON("http://165.227.17.104:8000/product/create", function(result) {
+            console.log('create product result');
+            console.log(result);
+        });
+        $('#successMsg').innerText("Created successfully!");
     }
 
-    function increment(){
-        var sku = ''; //$("#sku").val();
+    function increment(sku){
         $.getJSON("http://165.227.17.104:8000/inventory/increment/"+sku, function(result) {
 
         });
     }
 
-    function decrement(){
-        var sku = ''; //$("#sku").val();
+    function decrement(sku){
         $.getJSON("http://165.227.17.104:8000/inventory/decrement/"+sku, function(result) {
 
         });
