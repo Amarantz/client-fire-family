@@ -223,7 +223,7 @@
             console.log('update product result');
             console.log(result);
         });
-        $('#successMsg').innerText("Updated successfully!");
+        $('#successMsg').text("Updated successfully!");
         }
 
     function create(){
@@ -231,19 +231,25 @@
             console.log('create product result');
             console.log(result);
         });
-        $('#successMsg').innerText("Created successfully!");
+        $('#successMsg').text("Created successfully!");
+    }
+
+    function top_increment_decrement(){
+
     }
 
     function increment(sku){
         $.getJSON("http://165.227.17.104:8000/inventory/increment/"+sku, function(result) {
 
         });
+        loadProductTable();
     }
 
     function decrement(sku){
         $.getJSON("http://165.227.17.104:8000/inventory/decrement/"+sku, function(result) {
 
         });
+        loadProductTable();
     }
 
     $( window ).on( "load", loadAll );
