@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Products</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        #inc_dec{
+            max-width: 330px;
+            margin: auto;
+            background: lightgray;
+            padding: 10px;
+        }
+        #add_search{
+            max-width: 800px;
+            margin: auto;
+            background: lightgray;
+            padding: 10px;
+        }
+        #products {
+            max-width: 900px;
+            margin: auto;
+            background: lightgray;
+            padding: 10px;
+        }
+        #singleTable {
+            max-width: 900px;
+            margin: auto;
+            background: lightgray;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="fullPage">
+
+
+
+
+</div>
+<script>
+    function loadAll() {
+        $("#fullPage").empty();
+        loadIncDec();
+        loadAddSearch();
+        loadProductTable();
+    }
+    function loadIncDec() {
+        $("#fullPage").append("<div id=\"inc_dec\">" +
+                "        <select style=\"padding:10px\">" +
+                "            <option value=\"increment\">increment</option>" +
+                "            <option value=\"decrement\">decrement</option>" +
+                "        </select>" +
+                "        SKU: <input type=\"text\" name=\"sku\" style=\"padding-right: 5px\">" +
+                "        <button style=\"padding:10px\" type=\"button\">Submit</button>" +
+                "    </div>");
+    }
+    function loadAddSearch() {
+        $("#fullPage").append("<div id=\"add_search\">" +
+                "        <button type=\"button\" style=\"padding:20px; background-color: lightgreen\">ADD NEW</button>" +
+                "        <span style=\"padding-right:460px\"></span>" +
+                "        SKU: <input type=\"text\" name=\"search_sku\" style=\"padding-right: 5px\">" +
+                "        <button style=\"padding:10px\" type=\"button\">Search</button>" +
+                "    </div>");
+    }
+    function loadProductTable() {
+        $("#fullPage").append("<div id=\"products\">" +
+                "        <table border=\"5\" id=\"productTable\">" +
+                "            <tr>" +
+                "                <th>EDIT</th>" +
+                "                <th>productname</th>" +
+                "                <th>color</th>" +
+                "                <th>trimcolor</th>" +
+                "                <th>size</th>" +
+                "                <th>price</th>" +
+                "                <th>quantity</th>" +
+                "                <th>INCREMENT</th>" +
+                "                <th>DECREMENT</th>" +
+                "                <th>DELETE</th>" +
+
+                "            </tr>" +
+                "        </table>" +
+                "    </div>");
+        showProducts();
+    }
+    function showProducts(){
+        $.getJSON("http://165.227.17.104:8000/product", function(result){
+            $.each(result, function(i, field){
+                var qty = 'poop' // getQuantity(field.sku);
+                $("#productTable").append(
+                        "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\""+field.sku+"\">EDIT<button></td><td>"
+                        + field.productname + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
+                        + "</td> <td>" + field.price + "</td><td>" + qty + "</td><td><button type='button'>INC<button></td><td><button type='button'>DEC<button></td><td>"
+                        + "<button type='button'>DELETE<button></td></tr>"
+                );
+                console.log("product" + i);
+                console.log(field);
+            });
+        });
+    }
+    function getQuantity(sku){
+        $.getJSON("http://165.227.17.104:8000/inventory/"+sku, function(result){
+            console.log(sku + "inventory");
+            console.log(result);
+            return result.quantity;
+        });
+    }
+    function edit(id) {
+        loadSingle();
+        loadUpdate(id);
+    }
+    function loadSingle() {
+        // update or create will be called after this depending on the button pressed
+        $("#fullPage").empty();
+        $("#fullPage").append("<table id=\"singleTable\">" +
+                "        <tr>" +
+                "            <td>" +
+                "                Product Name: <input id=\"prodName\" type=\"text\">" +
+                "            </td>" +
+                "            <td style=\"padding-right: 50px\"></td>" +
+                "            <td>" +
+                "            Size: <input id=\"size\" type=\"text\">" +
+                "            </td>" +
+                "        </tr>" +
+                "        <tr>" +
+                "            <td>" +
+                "                SKU: <input id=\"sku\" type=\"text\">" +
+                "            </td>" +
+                "            <td style=\"padding-right: 50px\"></td>" +
+                "            <td>" +
+                "                Dimensions: <input id=\"dimensions\" type=\"text\">" +
+                "            </td>" +
+                "        </tr>" +
+                "        <tr>" +
+                "            <td>" +
+                "                Color: <input id=\"color\" type=\"text\">" +
+                "            </td>" +
+                "            <td style=\"padding-right: 50px\"></td>" +
+                "            <td>" +
+                "                Notification Qty: <input id=\"notifQty\" type=\"text\">" +
+                "            </td>" +
+                "        </tr>" +
+                "        <tr>" +
+                "            <td>" +
+                "                Trim Color: <input id=\"trimColor\" type=\"text\">" +
+                "            </td>" +
+                "            <td style=\"padding-right: 50px\"></td>" +
+                "            <td>" +
+                "                Quantity: <input id=\"qty\" type=\"text\">" +
+                "            </td>" +
+                "        </tr>" +
+                "        <tr><td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td></tr>" +
+                "        <tr><td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td></tr>" +
+                "        <tr>" +
+                "            <td>" +
+                "                <span id=\"successMsg\" style=\"color:limegreen\"></span>" +
+                "            </td>" +
+                "            <td style=\"padding-right: 50px\"></td>" +
+                "            <td>" +
+                "                 <span id=\"update_create\" style=\"padding:20px\">" +
+                "            <button type=\"button\" id=\"action\">test</button>" +
+                "        </span>" +
+                "                <button type=\"button\" id=\"cancel\" onclick=\"loadAll()\">cancel</button>" +
+                "            </td>" +
+                "        </tr>" +
+                "    </table>");
+
+    }
+    function loadUpdate(sku) {
+        $.getJSON("http://165.227.17.104:8000/product/"+sku, function(result) {
+            $("#prodName").val(result[0].productname);
+            $("#sku").val(result[0].sku);
+            $("#color").val(result[0].color);
+            $("#trimColor").val(result[0].trimcolor);
+            $("#size").val(result[0].size);
+            $("#dimensions").val(result[0].dimensions);
+            $("#notifQty").val(result[0].notificationquantity);
+            $("#qty").val('NOT AVAILABLE');
+        });
+        $('#sku').attr('readonly', true);
+        $("#action").text('Update');
+    }
+    function loadCreate() {
+
+    }
+
+    $( window ).on( "load", loadAll );
+</script>
+</body>
+</html>
