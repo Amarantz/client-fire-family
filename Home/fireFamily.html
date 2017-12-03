@@ -44,7 +44,7 @@
         $("#fullPage").empty();
         loadIncDec();
         loadAddSearch();
-        loadProductTable();
+        showProducts();
     }
     function loadIncDec() {
         $("#fullPage").append("<div id=\"inc_dec\">" +
@@ -52,19 +52,21 @@
                 "            <option value=\"increment\">increment</option>" +
                 "            <option value=\"decrement\">decrement</option>" +
                 "        </select>" +
-                "        SKU: <input type=\"text\" name=\"sku\" style=\"padding-right: 5px\">" +
+                "        SKU: <input type=\"text\" id=\"sku\" style=\"padding-right: 5px\">" +
                 "        <button style=\"padding:10px\" type=\"button\">Submit</button>" +
                 "    </div>");
     }
     function loadAddSearch() {
         $("#fullPage").append("<div id=\"add_search\">" +
-                "        <button type=\"button\" style=\"padding:20px; background-color: lightgreen\" onclick=\"addNew(this.id)\">ADD NEW</button>" +
-                "        <span style=\"padding-right:460px\"></span>" +
-                "        SKU: <input type=\"text\" name=\"search_sku\" style=\"padding-right: 5px\">" +
-                "        <button style=\"padding:10px\" type=\"button\">Search</button>" +
+                "        <button type=\"button\" style=\"padding:20px; background-color: lightgreen\" onclick=\"addNew()\">ADD NEW</button>" +
+                "        <span style=\"padding-right:170px\"></span>" +
+                "        <span><button type=\"button\" id=\"reloadPage\" onclick=\"loadAll()\">Show All Products</button></span>" +
+                "        <span style=\"padding-right:170px\"></span>" +
+                "        SKU: <input type=\"text\" id=\"search_sku\" style=\"padding-right: 5px\">" +
+                "        <button style=\"padding:10px\" type=\"button\" onclick=\"search()\">Search</button>" +
                 "    </div>");
     }
-    function loadProductTable() {
+    function loadProductHeaders() {
         $("#fullPage").append("<div id=\"products\">" +
                 "        <table border=\"5\" id=\"productTable\">" +
                 "            <tr>" +
@@ -78,13 +80,12 @@
                 "                <th>INCREMENT</th>" +
                 "                <th>DECREMENT</th>" +
                 "                <th>DELETE</th>" +
-
                 "            </tr>" +
                 "        </table>" +
                 "    </div>");
-        showProducts();
     }
     function showProducts(){
+        loadProductHeaders();
         $.getJSON("http://165.227.17.104:8000/product", function(result){
             $.each(result, function(i, field){
                 $("#productTable").append(
@@ -98,6 +99,21 @@
             });
         });
     }
+    function search(){
+        var sku = $("#search_sku").val();
+        $("#products").empty();
+        $("#productTable").remove();
+        loadProductHeaders();
+
+        $.getJSON("http://165.227.17.104:8000/product/"+sku, function(result){
+            $("#productTable").append(
+                    "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\""+result[0].sku+"\">EDIT<button></td><td>"
+                    + result[0].productname + "</td><td>" + result[0].color + "</td> <td>" + result[0].trimcolor + "</td><td>" + result[0].size
+                    + "</td> <td>" + result[0].price + "</td><td>" + result[0].quantity + "</td><td><button type='button'>INC<button></td><td><button type='button'>DEC<button></td><td>"
+                    + "<button type='button'>DELETE<button></td></tr>"
+            );
+        });
+    }
     function getQuantity(sku){
         $.getJSON("http://165.227.17.104:8000/inventory/"+sku, function(result){
             console.log(sku + "inventory");
@@ -109,9 +125,9 @@
         loadSingle();
         loadUpdate(id);
     }
-    function addNew(id) {
+    function addNew() {
         loadSingle();
-        loadUpdate(id)
+        loadCreate();
     }
     function loadSingle() {
         // update or create will be called after this depending on the button pressed
@@ -153,7 +169,8 @@
                 "                Quantity: <input id=\"qty\" type=\"text\">" +
                 "            </td>" +
                 "        </tr>" +
-                "        <tr><td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td></tr>" +
+                "        <tr><td>Price: <input id=\"price\" type=\"text\"></td>" +
+                "            <td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td></tr>" +
                 "        <tr><td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td><td style=\"padding: 5px\"></td></tr>" +
                 "        <tr>" +
                 "            <td>" +
@@ -180,21 +197,12 @@
             $("#dimensions").val(result[0].dimensions);
             $("#notifQty").val(result[0].notificationquantity);
             $("#qty").val(result[0].quantity);
+            $("#price").val(result[0].price);
         });
         $('#sku').attr('readonly', true);
         $("#action").text('Update');
     }
     function loadCreate() {
-        $.getJSON("http://165.227.17.104:8000/product/"+sku, function(result) {
-            $("#prodName").val(result[0].productname);
-            $("#sku").val(result[0].sku);
-            $("#color").val(result[0].color);
-            $("#trimColor").val(result[0].trimcolor);
-            $("#size").val(result[0].size);
-            $("#dimensions").val(result[0].dimensions);
-            $("#notifQty").val(result[0].notificationquantity);
-            $("#qty").val(result[0].quantity);
-        });
         $('#sku').attr('readonly', false);
         $("#action").text('Create');
     }
@@ -212,13 +220,25 @@
     }
 
     function update(){
+        var productName = $("#prodName").val();
         var sku = $("#sku").val();
+        var color = $("#color").val();
+        var trimcolor = $("#trimColor").val();
+        var size = $("#size").val();
+        var dimensions = $("#dimensions").val();
+        var notifyQty = $("#notifQty").val();
         var quantity = $("#qty").val();
+        var price = $("#price").val();
+
+
         $.getJSON("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, function(result) {
             console.log('update inventory result');
             console.log(result);
         });
-
+        // "productid","productname","notificationquantity","color","trimcolor","size","price","dimensions","sku","quantity"
+        // product.ProductName, product.NotificationQuantity, product.Color, product.TrimColor, product.Size, product.Price, product.Dimensions, product.SKU, prods[0].ProductID
+        var parameters = "?productname="+productName+"&notificationquantity="+notifyQty+"&color="+color+"&trimcolor="+trimcolor+"&size="
+                +size+"&price="+price+"&dimensions="+dimensions+"&sku="+sku; //+productId???
         $.getJSON("http://165.227.17.104:8000/product/update/"+sku, function(result) {
             console.log('update product result');
             console.log(result);
@@ -227,8 +247,25 @@
         }
 
     function create(){
+        var productName = $("#prodName").val();
+        var sku = $("#sku").val();
+        var color = $("#color").val();
+        var trimcolor = $("#trimColor").val();
+        var size = $("#size").val();
+        var dimensions = $("#dimensions").val();
+        var notifyQty = $("#notifQty").val();
+        var quantity = $("#qty").val();
+        var price = $("#price").val();
+
+        var parameters = "?productname="+productName+"&notificationquantity="+notifyQty+"&color="+color+"&trimcolor="+trimcolor+"&size="
+                +size+"&price="+price+"&dimensions="+dimensions+"&sku="+sku;
         $.getJSON("http://165.227.17.104:8000/product/create", function(result) {
             console.log('create product result');
+            console.log(result);
+        });
+        // has to be done after creation
+        $.getJSON("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, function(result) {
+            console.log('update inventory result');
             console.log(result);
         });
         $('#successMsg').text("Created successfully!");
@@ -242,14 +279,14 @@
         $.getJSON("http://165.227.17.104:8000/inventory/increment/"+sku, function(result) {
 
         });
-        loadProductTable();
+        showProducts();
     }
 
     function decrement(sku){
         $.getJSON("http://165.227.17.104:8000/inventory/decrement/"+sku, function(result) {
 
         });
-        loadProductTable();
+        showProducts();
     }
 
     $( window ).on( "load", loadAll );
