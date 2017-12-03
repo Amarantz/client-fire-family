@@ -48,12 +48,12 @@
     }
     function loadIncDec() {
         $("#fullPage").append("<div id=\"inc_dec\">" +
-                "        <select style=\"padding:10px\">" +
+                "        <select id=\"crement\" style=\"padding:10px\">" +
                 "            <option value=\"increment\">increment</option>" +
                 "            <option value=\"decrement\">decrement</option>" +
                 "        </select>" +
                 "        SKU: <input type=\"text\" id=\"sku\" style=\"padding-right: 5px\">" +
-                "        <button style=\"padding:10px\" type=\"button\">Submit</button>" +
+                "        <button style=\"padding:10px\" type=\"button\" onclick='top_increment_decrement()'>Submit</button>" +
                 "    </div>");
     }
     function loadAddSearch() {
@@ -276,7 +276,17 @@
     }
 
     function top_increment_decrement(){
-
+        var sku = $("#sku").val();
+        var crement = $("#crement").val();
+        if(crement == "increment"){
+            increment(sku);
+        }
+        else if(crement == "decrement"){
+            decrement(sku)
+        }
+        else{
+            alert('ya dun goofed son');
+        }
     }
 
     function increment(sku){
