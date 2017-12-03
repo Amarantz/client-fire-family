@@ -92,7 +92,7 @@
                         "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\""+field.sku+"\">EDIT<button></td><td>"
                         + field.productname + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
                         + "</td> <td>" + field.price + "</td><td>" + field.quantity + "</td><td><button type='button'>INC<button></td><td><button type='button'>DEC<button></td><td>"
-                        + "<button type='button'>DELETE<button></td></tr>"
+                        + "<button type='button' id=\""+result.sku+"\" onclick=\"deleteProduct(this.id)\">DELETE<button></td></tr>"
                 );
                 console.log("product" + i);
                 console.log(field);
@@ -110,17 +110,11 @@
                     "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\""+result[0].sku+"\">EDIT<button></td><td>"
                     + result[0].productname + "</td><td>" + result[0].color + "</td> <td>" + result[0].trimcolor + "</td><td>" + result[0].size
                     + "</td> <td>" + result[0].price + "</td><td>" + result[0].quantity + "</td><td><button type='button'>INC<button></td><td><button type='button'>DEC<button></td><td>"
-                    + "<button type='button'>DELETE<button></td></tr>"
+                    + "<button type='button' id=\""+result.sku+"\" onclick=\"deleteProduct(this.id)\">DELETE<button></td></tr>"
             );
         });
     }
-    function getQuantity(sku){
-        $.getJSON("http://165.227.17.104:8000/inventory/"+sku, function(result){
-            console.log(sku + "inventory");
-            console.log(result);
-            return result.quantity;
-        });
-    }
+    
     function edit(id) {
         loadSingle();
         loadUpdate(id);
@@ -279,14 +273,20 @@
         $.getJSON("http://165.227.17.104:8000/inventory/increment/"+sku, function(result) {
 
         });
-        showProducts();
+        loadAll();
     }
 
     function decrement(sku){
         $.getJSON("http://165.227.17.104:8000/inventory/decrement/"+sku, function(result) {
 
         });
-        showProducts();
+        loadAll();
+    }
+    function deleteProduct(sku){
+         $.getJSON("http://165.227.17.104:8000/inventory/decrement/"+sku, function(result) {
+            
+         });
+
     }
 
     $( window ).on( "load", loadAll );
