@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>All Products</title>
+    <title>Fire Family</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <style>
         #inc_dec{
@@ -87,11 +87,10 @@
     function showProducts(){
         $.getJSON("http://165.227.17.104:8000/product", function(result){
             $.each(result, function(i, field){
-                var qty = 'poop' // getQuantity(field.sku);
                 $("#productTable").append(
                         "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\""+field.sku+"\">EDIT<button></td><td>"
                         + field.productname + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
-                        + "</td> <td>" + field.price + "</td><td>" + qty + "</td><td><button type='button'>INC<button></td><td><button type='button'>DEC<button></td><td>"
+                        + "</td> <td>" + field.price + "</td><td>" + field.quantity + "</td><td><button type='button'>INC<button></td><td><button type='button'>DEC<button></td><td>"
                         + "<button type='button'>DELETE<button></td></tr>"
                 );
                 console.log("product" + i);
@@ -159,7 +158,7 @@
                 "            <td style=\"padding-right: 50px\"></td>" +
                 "            <td>" +
                 "                 <span id=\"update_create\" style=\"padding:20px\">" +
-                "            <button type=\"button\" id=\"action\">test</button>" +
+                "            <button type=\"button\" id=\"action\" onclick=\"crement(this.innerText)\">test</button>" +
                 "        </span>" +
                 "                <button type=\"button\" id=\"cancel\" onclick=\"loadAll()\">cancel</button>" +
                 "            </td>" +
@@ -176,13 +175,58 @@
             $("#size").val(result[0].size);
             $("#dimensions").val(result[0].dimensions);
             $("#notifQty").val(result[0].notificationquantity);
-            $("#qty").val('NOT AVAILABLE');
+            $("#qty").val(result[0].quantity);
         });
         $('#sku').attr('readonly', true);
         $("#action").text('Update');
     }
     function loadCreate() {
+        $.getJSON("http://165.227.17.104:8000/product/"+sku, function(result) {
+            $("#prodName").val(result[0].productname);
+            $("#sku").val(result[0].sku);
+            $("#color").val(result[0].color);
+            $("#trimColor").val(result[0].trimcolor);
+            $("#size").val(result[0].size);
+            $("#dimensions").val(result[0].dimensions);
+            $("#notifQty").val(result[0].notificationquantity);
+            $("#qty").val(result[0].quantity);
+        });
+        $('#sku').attr('readonly', false);
+        $("#action").text('Create');
+    }
 
+    function crement(txt) {
+        if (txt == 'Update'){
+            update();
+        }
+        else if(txt == 'Create'){
+
+        }
+        else{
+            alert('ya done goofed son ' + txt)
+        }
+    }
+
+    function update(){
+        var sku = $("#sku").val();
+        var quantity = $("#qty").val();
+        $.getJSON("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, function(result) {
+
+        });
+    }
+
+    function increment(){
+        var sku = ''; //$("#sku").val();
+        $.getJSON("http://165.227.17.104:8000/inventory/increment/"+sku, function(result) {
+
+        });
+    }
+
+    function decrement(){
+        var sku = ''; //$("#sku").val();
+        $.getJSON("http://165.227.17.104:8000/inventory/decrement/"+sku, function(result) {
+
+        });
     }
 
     $( window ).on( "load", loadAll );
