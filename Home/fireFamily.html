@@ -94,8 +94,6 @@
                             + "</td> <td>" + field.price + "</td><td>" + field.quantity + "</td><td><button type='button' id=\""+field.sku+"\" onclick='increment(this.id)'>INC<button></td><td><button type='button' id=\""+field.sku+"\" onclick='decrement(this.id)'>DEC<button></td><td>"
                             + "<button type='button' id=\"" + field.sku + "\" onclick=\"deleteProduct(this.id)\">DELETE<button></td></tr>"
                     );
-               // console.log("product" + i);
-               // console.log(field);
             });
 
         });
@@ -239,13 +237,9 @@
         data = JSON.stringify(data);
 
         $.post("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, '',function(response) {
-           // console.log('update inventory result');
-           // console.log(response);
         }, 'json');
 
         $.post("http://165.227.17.104:8000/product/update/"+sku, data, function(response) {
-           // console.log('update product result');
-           // console.log(response);
         }, 'json');
         $('#successMsg').text("Updated successfully!");
         }
@@ -279,8 +273,6 @@
         },'json' );
         // has to be done after creation
         $.post("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, '', function(response) {
-           // console.log('update inventory result');
-           // console.log(response);
         }, 'json');
 
         $('#successMsg').text("Created successfully!");
