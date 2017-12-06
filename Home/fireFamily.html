@@ -94,8 +94,8 @@
                             + "</td> <td>" + field.price + "</td><td>" + field.quantity + "</td><td><button type='button' id=\""+field.sku+"\" onclick='increment(this.id)'>INC<button></td><td><button type='button' id=\""+field.sku+"\" onclick='decrement(this.id)'>DEC<button></td><td>"
                             + "<button type='button' id=\"" + field.sku + "\" onclick=\"deleteProduct(this.id)\">DELETE<button></td></tr>"
                     );
-                console.log("product" + i);
-                console.log(field);
+               // console.log("product" + i);
+               // console.log(field);
             });
 
         });
@@ -216,25 +216,36 @@
 
     function update(){
         var productName = $("#prodName").val();
-        var sku = $("#sku").val();
+        var sku = parseInt($("#sku").val());
         var color = $("#color").val();
         var trimcolor = $("#trimColor").val();
         var size = $("#size").val();
         var dimensions = $("#dimensions").val();
-        var notifyQty = $("#notifQty").val();
-        var quantity = $("#qty").val();
-        var price = $("#price").val();
+        var notifyQty = parseInt($("#notifQty").val());
+        var quantity = parseInt($("#qty").val());
+        var price = parseFloat($("#price").val());
 
+        var data =
+                {
+                    "productname": productName, //"Swing", // string
+                    "notificationquantity": notifyQty, // 10, // int
+                    "color": color, //"test", // string
+                    "trimcolor": trimcolor, //"test", // string
+                    "size": size, //"test", // string
+                    "price": price, //5.99, // float
+                    "dimensions": dimensions, //"test", // string
+                    "sku": sku, //115 // int
+                };
+        data = JSON.stringify(data);
 
-        $.post("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, function(response) {
-            console.log('update inventory result');
-            console.log(response);
+        $.post("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, '',function(response) {
+           // console.log('update inventory result');
+           // console.log(response);
         }, 'json');
-        var parameters = "?productname="+productName+"&notificationquantity="+notifyQty+"&color="+color+"&trimcolor="+trimcolor+"&size="
-                +size+"&price="+price+"&dimensions="+dimensions+"&sku="+sku; //+productId???
-        $.post("http://165.227.17.104:8000/product/update/"+sku, function(response) {
-            console.log('update product result');
-            console.log(response);
+
+        $.post("http://165.227.17.104:8000/product/update/"+sku, data, function(response) {
+           // console.log('update product result');
+           // console.log(response);
         }, 'json');
         $('#successMsg').text("Updated successfully!");
         }
@@ -262,15 +273,14 @@
                     "sku": sku, //115 // int
                 };
         data = JSON.stringify(data);
-        alert(data);
 
         $.post( "http://165.227.17.104:8000/product/create", data, function(response) {
             // Do something with the request
         },'json' );
         // has to be done after creation
         $.post("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, '', function(response) {
-            console.log('update inventory result');
-            console.log(response);
+           // console.log('update inventory result');
+           // console.log(response);
         }, 'json');
 
         $('#successMsg').text("Created successfully!");
