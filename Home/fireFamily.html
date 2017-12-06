@@ -242,7 +242,8 @@
         $.post("http://165.227.17.104:8000/product/update/"+sku, data, function(response) {
         }, 'json');
         $('#successMsg').text("Updated successfully!");
-        }
+        $("#cancel").text('Back');
+    }
 
     function create(){
         var productName = $("#prodName").val();
@@ -257,14 +258,14 @@
 
         var data =
                 {
-                    "productname": productName, //"Swing", // string
-                    "notificationquantity": notifyQty, // 10, // int
-                    "color": color, //"test", // string
-                    "trimcolor": trimcolor, //"test", // string
-                    "size": size, //"test", // string
-                    "price": price, //5.99, // float
-                    "dimensions": dimensions, //"test", // string
-                    "sku": sku, //115 // int
+                    "productname": productName,  // string
+                    "notificationquantity": notifyQty, // int
+                    "color": color, // string
+                    "trimcolor": trimcolor,  // string
+                    "size": size, // string
+                    "price": price, // float
+                    "dimensions": dimensions, // string
+                    "sku": sku, // int
                 };
         data = JSON.stringify(data);
 
@@ -276,6 +277,10 @@
         }, 'json');
 
         $('#successMsg').text("Created successfully!");
+        // cancel button back
+        $("#cancel").text('Back');
+        // create button update
+        $("#action").text('Update');
     }
 
     function top_increment_decrement(){
