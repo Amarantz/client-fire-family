@@ -88,25 +88,16 @@
         loadProductHeaders();
         $.getJSON("http://165.227.17.104:8000/product", function(result){
             $.each(result, function(i, field){
-                $.getJSON("http://165.227.17.104:8000/inventory/"+field.sku, function(result){
-                    var del = result[0].deleted;
-                    if(del > 0 ) {
-                        $("#productTable").append(
-                                "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\"" + field.sku + "\">EDIT<button></td><td>"
-                                + field.productname + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
-                                + "</td> <td>" + field.price + "</td><td>" + field.quantity + "</td><td><button type='button' id=\""+field.sku+"\" onclick='increment(this.id)'>INC<button></td><td><button type='button' id=\""+field.sku+"\" onclick='decrement(this.id)'>DEC<button></td><td>"
-                                + "<button type='button' id=\"" + field.sku + "\" onclick=\"deleteProduct(this.id)\">DELETE<button></td></tr>"
-                        );
-                    }
-                });
+                    $("#productTable").append(
+                            "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\"" + field.sku + "\">EDIT<button></td><td>"
+                            + field.productname + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
+                            + "</td> <td>" + field.price + "</td><td>" + field.quantity + "</td><td><button type='button' id=\""+field.sku+"\" onclick='increment(this.id)'>INC<button></td><td><button type='button' id=\""+field.sku+"\" onclick='decrement(this.id)'>DEC<button></td><td>"
+                            + "<button type='button' id=\"" + field.sku + "\" onclick=\"deleteProduct(this.id)\">DELETE<button></td></tr>"
+                    );
                 console.log("product" + i);
                 console.log(field);
             });
-        });
-    }
-    function deleteValue (sku){
-        $.getJSON("http://165.227.17.104:8000/inventory/"+sku, function(result){
-            var del = result[0].deleted;
+
         });
     }
     function search(){
@@ -235,43 +226,57 @@
         var price = $("#price").val();
 
 
-        $.getJSON("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, function(result) {
+        $.post("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, function(response) {
             console.log('update inventory result');
-            console.log(result);
-        });
+            console.log(response);
+        }, 'json');
         // "productid","productname","notificationquantity","color","trimcolor","size","price","dimensions","sku","quantity"
         // product.ProductName, product.NotificationQuantity, product.Color, product.TrimColor, product.Size, product.Price, product.Dimensions, product.SKU, prods[0].ProductID
         var parameters = "?productname="+productName+"&notificationquantity="+notifyQty+"&color="+color+"&trimcolor="+trimcolor+"&size="
                 +size+"&price="+price+"&dimensions="+dimensions+"&sku="+sku; //+productId???
-        $.getJSON("http://165.227.17.104:8000/product/update/"+sku, function(result) {
+        $.post("http://165.227.17.104:8000/product/update/"+sku, function(response) {
             console.log('update product result');
-            console.log(result);
-        });
+            console.log(response);
+        }, 'json');
         $('#successMsg').text("Updated successfully!");
         }
 
     function create(){
         var productName = $("#prodName").val();
-        var sku = $("#sku").val();
+        var sku = parseInt($("#sku").val());
         var color = $("#color").val();
         var trimcolor = $("#trimColor").val();
         var size = $("#size").val();
         var dimensions = $("#dimensions").val();
-        var notifyQty = $("#notifQty").val();
-        var quantity = $("#qty").val();
-        var price = $("#price").val();
+        var notifyQty = parseInt($("#notifQty").val());
+        var quantity = parseInt($("#qty").val());
+        var price = parseFloat($("#price").val());
 
-        var parameters = "?productname="+productName+"&notificationquantity="+notifyQty+"&color="+color+"&trimcolor="+trimcolor+"&size="
-                +size+"&price="+price+"&dimensions="+dimensions+"&sku="+sku;
-        $.getJSON("http://165.227.17.104:8000/product/create", function(result) {
-            console.log('create product result');
-            console.log(result);
-        });
+        // var parameters = "{productname:"+productName+", notificationquantity:"+notifyQty+", color:"+color+", trimcolor:"+trimcolor+", size:"
+        //         +size+", price:"+price+", dimensions:"+dimensions+", sku:"+sku+"}";
+        var data =
+                {
+                    "productname": productName, //"Swing", // string
+                    "notificationquantity": notifyQty, // 10, // int
+                    "color": color, //"test", // string
+                    "trimcolor": trimcolor, //"test", // string
+                    "size": size, //"test", // string
+                    "price": price, //5.99, // float
+                    "dimensions": dimensions, //"test", // string
+                    "sku": sku, //115 // int
+                };
+        data = JSON.stringify(data);
+        alert(data);
+
+        $.post( "http://165.227.17.104:8000/product/create", data, function(response) {
+            // Do something with the request
+        },'json' );
         // has to be done after creation
-        $.getJSON("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, function(result) {
+        $.post("http://165.227.17.104:8000/inventory/update/"+sku+"/"+quantity, '', function(response) {
             console.log('update inventory result');
-            console.log(result);
-        });
+            console.log(response);
+        }, 'json');
+
         $('#successMsg').text("Created successfully!");
     }
 
@@ -290,21 +295,21 @@
     }
 
     function increment(sku){
-        $.getJSON("http://165.227.17.104:8000/inventory/increment/"+sku, function(result) {
-        });
+        $.post("http://165.227.17.104:8000/inventory/increment/"+sku, '', function(response) {
+        }, 'json');
         alert("incremented product with sku: " + sku);
         loadAll(); // updates quantity on list
     }
 
     function decrement(sku){
-        $.getJSON("http://165.227.17.104:8000/inventory/decrement/"+sku, function(result) {
-        });
+        $.post("http://165.227.17.104:8000/inventory/decrement/"+sku, '', function(response) {
+        }, 'json');
         alert("decremented product with sku: " + sku);
         loadAll(); // updates quantity on list
     }
     function deleteProduct(sku){
-        $.getJSON("http://165.227.17.104:8000/product/delete/"+sku, function(result) {
-        });
+        $.post("http://165.227.17.104:8000/product/delete/"+sku, '', function(response) {
+        }, 'json');
         alert("deleted product with sku: " + sku);
 
         loadAll(); // removes item from list
