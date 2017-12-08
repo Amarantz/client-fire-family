@@ -33,6 +33,7 @@
     </style>
 </head>
 <body>
+    
 <div id="fullPage">
 
 
@@ -45,6 +46,9 @@
         loadIncDec();
         loadAddSearch();
         showProducts();
+        loadSubmitKeyListener();
+
+        $("#sku").focus();
     }
     function loadIncDec() {
         $("#fullPage").append("<div id=\"inc_dec\">" +
@@ -53,8 +57,16 @@
                 "            <option value=\"decrement\">decrement</option>" +
                 "        </select>" +
                 "        SKU: <input type=\"text\" id=\"sku\" style=\"padding-right: 5px\">" +
-                "        <button style=\"padding:10px\" type=\"button\" onclick='top_increment_decrement()'>Submit</button>" +
+                "        <button id=\"submit\" style=\"padding:10px\" type=\"submit\" onclick='top_increment_decrement()'>Submit</button>" +
                 "    </div>");
+    }
+    function loadSubmitKeyListener() {
+        $('#sku').keypress(function(e){
+            if(e.keyCode==13) {
+                $('#submit').click();  
+                return false;
+            }
+        });
     }
     function loadAddSearch() {
         $("#fullPage").append("<div id=\"add_search\">" +
@@ -300,14 +312,14 @@
     function increment(sku){
         $.post("http://165.227.17.104:8000/inventory/increment/"+sku, '', function(response) {
         }, 'json');
-        alert("incremented product with sku: " + sku);
+        // alert("incremented product with sku: " + sku);
         loadAll(); // updates quantity on list
     }
 
     function decrement(sku){
         $.post("http://165.227.17.104:8000/inventory/decrement/"+sku, '', function(response) {
         }, 'json');
-        alert("decremented product with sku: " + sku);
+        // alert("decremented product with sku: " + sku);
         loadAll(); // updates quantity on list
     }
     function deleteProduct(sku){
