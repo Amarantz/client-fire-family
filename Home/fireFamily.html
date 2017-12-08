@@ -6,13 +6,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <style>
         #inc_dec{
-            max-width: 330px;
+            max-width: 450px;
             margin: auto;
             background: lightgray;
             padding: 10px;
         }
         #add_search{
-            max-width: 800px;
+            max-width: 900px;
             margin: auto;
             background: lightgray;
             padding: 10px;
@@ -131,7 +131,7 @@
         $.getJSON("http://165.227.17.104:8000/product/"+sku, function(result){
             $("#productTable").append(
                     "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\""+result[0].sku+"\">EDIT</button></td><td>"
-                    + result[0].productname + "</td><td>" + field.sku + "</td><td>" + result[0].color + "</td> <td>" + result[0].trimcolor + "</td><td>" + result[0].size
+                    + result[0].productname + "</td><td>" + result[0].sku + "</td><td>" + result[0].color + "</td> <td>" + result[0].trimcolor + "</td><td>" + result[0].size
                     + "</td> <td>" + result[0].price + "</td><td>" + result[0].quantity + "</td><td><button type='button' id=\""+result[0].sku+"\" onclick='increment(this.id)'>INC</button></td><td><button type='button' id=\""+result[0].sku+"\" onclick='decrement(this.id)'>DEC</button></td><td>"
                     + "<button type='button' id=\""+result[0].sku+"\" onclick=\"deleteProduct(this.id)\">DELETE</button></td></tr>"
             );
