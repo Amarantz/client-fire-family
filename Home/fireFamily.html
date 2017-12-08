@@ -72,6 +72,7 @@
                 "            <tr>" +
                 "                <th>EDIT</th>" +
                 "                <th>productname</th>" +
+                "                <th>sku</th>" +
                 "                <th>color</th>" +
                 "                <th>trimcolor</th>" +
                 "                <th>size</th>" +
@@ -88,12 +89,23 @@
         loadProductHeaders();
         $.getJSON("http://165.227.17.104:8000/product", function(result){
             $.each(result, function(i, field){
+                var notify = parseInt(field.notificationquantity);
+                var qty = parseInt(field.quantity);
+                if(qty <= notify){
                     $("#productTable").append(
-                            "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\"" + field.sku + "\">EDIT</button></td><td>"
-                            + field.productname + "</td><td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
+                            "<tr style=\"background-color: red\"><td><button type='button' onclick=\"edit(this.id)\" id=\"" + field.sku + "\">EDIT</button></td><td>"
+                            + field.productname + "</td><td>" + field.sku + "</td> <td>"+ field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
                             + "</td> <td>" + field.price + "</td><td>" + field.quantity + "</td><td><button type='button' id=\""+field.sku+"\" onclick='increment(this.id)'>INC</button></td><td><button type='button' id=\""+field.sku+"\" onclick='decrement(this.id)'>DEC</button></td><td>"
                             + "<button type='button' id=\"" + field.sku + "\" onclick=\"deleteProduct(this.id)\">DELETE</button></td></tr>"
                     );
+                } else {
+                    $("#productTable").append(
+                            "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\"" + field.sku + "\">EDIT</button></td><td>"
+                            + field.productname + "</td><td>" + field.sku + "</td> <td>" + field.color + "</td> <td>" + field.trimcolor + "</td><td>" + field.size
+                            + "</td> <td>" + field.price + "</td><td>" + field.quantity + "</td><td><button type='button' id=\"" + field.sku + "\" onclick='increment(this.id)'>INC</button></td><td><button type='button' id=\"" + field.sku + "\" onclick='decrement(this.id)'>DEC</button></td><td>"
+                            + "<button type='button' id=\"" + field.sku + "\" onclick=\"deleteProduct(this.id)\">DELETE</button></td></tr>"
+                    );
+                }
             });
 
         });
@@ -107,7 +119,7 @@
         $.getJSON("http://165.227.17.104:8000/product/"+sku, function(result){
             $("#productTable").append(
                     "<tr><td><button type='button' onclick=\"edit(this.id)\" id=\""+result[0].sku+"\">EDIT</button></td><td>"
-                    + result[0].productname + "</td><td>" + result[0].color + "</td> <td>" + result[0].trimcolor + "</td><td>" + result[0].size
+                    + result[0].productname + "</td><td>" + field.sku + "</td><td>" + result[0].color + "</td> <td>" + result[0].trimcolor + "</td><td>" + result[0].size
                     + "</td> <td>" + result[0].price + "</td><td>" + result[0].quantity + "</td><td><button type='button' id=\""+result[0].sku+"\" onclick='increment(this.id)'>INC</button></td><td><button type='button' id=\""+result[0].sku+"\" onclick='decrement(this.id)'>DEC</button></td><td>"
                     + "<button type='button' id=\""+result[0].sku+"\" onclick=\"deleteProduct(this.id)\">DELETE</button></td></tr>"
             );
@@ -300,22 +312,22 @@
     function increment(sku){
         $.post("http://165.227.17.104:8000/inventory/increment/"+sku, '', function(response) {
         }, 'json');
-        alert("incremented product with sku: " + sku);
         loadAll(); // updates quantity on list
     }
 
     function decrement(sku){
         $.post("http://165.227.17.104:8000/inventory/decrement/"+sku, '', function(response) {
         }, 'json');
-        alert("decremented product with sku: " + sku);
         loadAll(); // updates quantity on list
     }
     function deleteProduct(sku){
-        $.post("http://165.227.17.104:8000/product/delete/"+sku, '', function(response) {
-        }, 'json');
-        alert("deleted product with sku: " + sku);
+        var yes = confirm("delete product with sku: " + sku + "?");
+        if(yes) {
+            $.post("http://165.227.17.104:8000/product/delete/" + sku, '', function (response) {
+            }, 'json');
 
-        loadAll(); // removes item from list
+            loadAll(); // removes item from list
+        }
     }
 
     $( window ).on( "load", loadAll );
